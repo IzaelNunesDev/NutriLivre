@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.screens
+package nutrilivre.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
@@ -52,22 +52,35 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.myapplication.R
-import com.example.myapplication.navigation.AppScreens
-import com.example.myapplication.model.DadosMockados
-import com.example.myapplication.model.Receita
-import com.example.myapplication.ui.components.BottomNavigationBar
+import nutrilivre.navigation.AppScreens
+import nutrilivre.model.DadosMockados
+import nutrilivre.model.Receita
+import nutrilivre.ui.components.BottomNavigationBar
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import nutrilivre.ui.components.ReceitaCard
+import nutrilivre.data.AppDatabase
+import nutrilivre.data.FavoritesRepository
+import nutrilivre.ui.screens.FavoritesViewModel
+import nutrilivre.ui.screens.FavoritesViewModelFactory
+import androidx.compose.runtime.collectAsState
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalAnimationApi::class)
 @Composable
 fun TelaInicial(navController: NavHostController) {
-    // Dados mockados
     val receitas = remember { mutableStateListOf(*DadosMockados.listaDeReceitas.toTypedArray()) }
     var expandedMenu by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val db = androidx.room.Room.databaseBuilder(
+        context,
+        AppDatabase::class.java,
+        "app_database"
+    ).build()
+    val repository = FavoritesRepository(db.favoriteDao())
+    val viewModel: FavoritesViewModel = viewModel(factory = FavoritesViewModelFactory(repository))
+    val favoritos by viewModel.favoritos.collectAsState()
 
     Scaffold(
         topBar = {
@@ -132,54 +145,17 @@ fun TelaInicial(navController: NavHostController) {
                         animationSpec = tween(300)
                     ) { it / 2 }
                 ) {
-                    ReceitaCard(receita) {
-                        navController.navigate(
-                            AppScreens.DetalheScreen.createRoute(receita.id)
-                        )
-                    }
+                    ReceitaCard(
+                        receita = receita,
+                        onReceitaClick = {
+                            navController.navigate(
+                                AppScreens.DetalheScreen.createRoute(receita.id)
+                            )
+                        },
+                        onFavoritoClick = { viewModel.toggleFavorito(it) },
+                        isFavorito = favoritos.any { it.id == receita.id }
+                    )
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun ReceitaCard(receita: Receita, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick),
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            AsyncImage(
-                model = receita.imagemUrl,
-                contentDescription = receita.nome,
-                modifier = Modifier
-                    .size(72.dp)
-                    .clip(RoundedCornerShape(8.dp)),
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.placeholder_shimmer)
-            )
-            Spacer(Modifier.width(12.dp))
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-                Text(
-                    text = receita.nome,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(Modifier.height(4.dp))
-                Text(
-                    text = receita.descricaoCurta,
-                    style = MaterialTheme.typography.bodyMedium
-                )
             }
         }
     }

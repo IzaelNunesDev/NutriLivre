@@ -1,4 +1,4 @@
-package com.example.myapplication.model
+package nutrilivre.model
 
 data class AppSettings(
     val darkModeEnabled: Boolean = false,

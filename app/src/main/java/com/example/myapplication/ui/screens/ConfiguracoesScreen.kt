@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.myapplication.ui.screens
+package nutrilivre.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -21,7 +21,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.myapplication.data.UserPreferencesRepository
+import nutrilivre.data.UserPreferencesRepository
+import nutrilivre.ui.screens.SettingsViewModel
+import nutrilivre.ui.screens.SettingsViewModelFactory
+
 
 @Composable
 fun ConfiguracoesScreen(

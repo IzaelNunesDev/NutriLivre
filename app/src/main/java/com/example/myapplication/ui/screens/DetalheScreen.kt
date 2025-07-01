@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.screens
+package nutrilivre.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -11,16 +11,29 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.example.myapplication.model.DadosMockados
-import com.example.myapplication.ui.components.BottomNavigationBar
+import nutrilivre.model.DadosMockados
+import nutrilivre.ui.components.BottomNavigationBar
+import androidx.compose.ui.platform.LocalContext
+import nutrilivre.data.AppDatabase
+import nutrilivre.data.FavoritesRepository
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetalheScreen(navController: NavHostController, receitaId: Int?) {
+    val context = LocalContext.current
+    val db = androidx.room.Room.databaseBuilder(
+        context,
+        AppDatabase::class.java,
+        "app_database"
+    ).build()
+    val repository = FavoritesRepository(db.favoriteDao())
+    val viewModel: FavoritesViewModel = viewModel(factory = FavoritesViewModelFactory(repository))
+    val favoritos by viewModel.favoritos.collectAsState()
     val receita = remember { DadosMockados.listaDeReceitas.find { it.id == receitaId } }
-    var isFavorite by remember { mutableStateOf(receita?.isFavorita ?: false) }
+    val isFavorite = favoritos.any { it.id == receita?.id }
 
     Scaffold(
         topBar = {
@@ -66,13 +79,7 @@ fun DetalheScreen(navController: NavHostController, receitaId: Int?) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Button(onClick = {
-                        r.isFavorita = !r.isFavorita
-                        isFavorite = r.isFavorita
-                        if (isFavorite) {
-                            DadosMockados.listaDeFavoritosMock.add(r)
-                        } else {
-                            DadosMockados.listaDeFavoritosMock.remove(r)
-                        }
+                        viewModel.toggleFavorito(r)
                     }) {
                         Icon(
                             Icons.Filled.Favorite,

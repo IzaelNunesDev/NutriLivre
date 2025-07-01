@@ -1,5 +1,5 @@
 // app/src/main/java/com/example/myapplication/ui/components/BottomNavigationBar.kt
-package com.example.myapplication.ui.components
+package nutrilivre.ui.components
 
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
@@ -9,7 +9,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.myapplication.navigation.AppScreens
+import nutrilivre.navigation.AppScreens
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {

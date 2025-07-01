@@ -1,5 +1,5 @@
 // C:/Users/Sarah Lisley/AndroidStudioProjects/MyApplication3/app/src/main/java/com/example/myapplication/ui/theme/Theme.kt
-package com.example.myapplication.ui.theme
+package nutrilivre.ui.theme
 
 import android.app.Activity
 import android.os.Build

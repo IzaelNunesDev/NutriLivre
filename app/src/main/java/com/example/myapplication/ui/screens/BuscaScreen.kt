@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.screens
+package nutrilivre.ui.screens
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -8,13 +8,16 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import com.example.myapplication.model.DadosMockados
-import com.example.myapplication.navigation.AppScreens
-import com.example.myapplication.ui.components.BottomNavigationBar
+import nutrilivre.model.DadosMockados
+import nutrilivre.model.Receita
+import nutrilivre.navigation.AppScreens
+import nutrilivre.ui.components.BottomNavigationBar
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,19 +34,31 @@ fun BuscaScreen(navController: NavHostController) {
             }
         }
     }
+    val comparacaoViewModel: ComparacaoViewModel = viewModel()
+    val selecionadas by comparacaoViewModel.selecionadas.collectAsState()
+    var modoSelecao by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Buscar Receitas") },
                 actions = {
-                    IconButton(onClick = {  }) {
+                    IconButton(onClick = { modoSelecao = !modoSelecao }) {
                         Icon(Icons.Filled.MoreVert, contentDescription = "Menu")
                     }
                 }
             )
         },
-        bottomBar = { BottomNavigationBar(navController = navController) }
+        bottomBar = { BottomNavigationBar(navController = navController) },
+        floatingActionButton = {
+            if (modoSelecao && selecionadas.size >= 2) {
+                FloatingActionButton(onClick = {
+                    navController.navigate("comparacao")
+                }) {
+                    Text("Comparar")
+                }
+            }
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -60,31 +75,55 @@ fun BuscaScreen(navController: NavHostController) {
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn {
                 items(filteredReceitas) { receita ->
+                    val isSelecionada = selecionadas.contains(receita)
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                navController.navigate(AppScreens.DetalheScreen.createRoute(receita.id))
+                                if (modoSelecao) {
+                                    if (isSelecionada) {
+                                        comparacaoViewModel.removerReceita(receita)
+                                    } else {
+                                        comparacaoViewModel.adicionarReceita(receita)
+                                    }
+                                } else {
+                                    navController.navigate(AppScreens.DetalheScreen.createRoute(receita.id))
+                                }
                             },
                         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                     ) {
-                        Column(modifier = Modifier.padding(16.dp)) {
-                            AsyncImage(
-                                model = receita.imagemUrl,
-                                contentDescription = receita.nome,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(120.dp)
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                            Text(
-                                text = receita.nome,
-                                style = MaterialTheme.typography.titleMedium
-                            )
-                            Text(
-                                text = receita.descricaoCurta,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(8.dp)
+                        ) {
+                            if (modoSelecao) {
+                                Checkbox(
+                                    checked = isSelecionada,
+                                    onCheckedChange = {
+                                        if (it) comparacaoViewModel.adicionarReceita(receita)
+                                        else comparacaoViewModel.removerReceita(receita)
+                                    }
+                                )
+                                Spacer(Modifier.width(8.dp))
+                            }
+                            Column(modifier = Modifier.weight(1f)) {
+                                AsyncImage(
+                                    model = receita.imagemUrl,
+                                    contentDescription = receita.nome,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(80.dp)
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = receita.nome,
+                                    style = MaterialTheme.typography.titleMedium
+                                )
+                                Text(
+                                    text = receita.descricaoCurta,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))

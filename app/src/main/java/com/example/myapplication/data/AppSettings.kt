@@ -1,4 +1,4 @@
-package com.example.myapplication.data
+package nutrilivre.data
 
 import android.content.Context
 import androidx.datastore.core.DataStore

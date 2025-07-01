@@ -1,12 +1,11 @@
-package com.example.myapplication.navigation
+package nutrilivre.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.myapplication.ui.screens.*
+import nutrilivre.ui.screens.*
 import androidx.compose.material3.Text // <- Importa o Text correto do Material3
-import com.example.myapplication.ui.screens.ConfiguracoesScreen
 
 // Rotas nomeadas
 sealed class AppScreens(val route: String) {

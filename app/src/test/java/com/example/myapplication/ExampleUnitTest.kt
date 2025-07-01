@@ -1,4 +1,4 @@
-package com.example.myapplication
+package nutrilivre
 
 import org.junit.Test
 

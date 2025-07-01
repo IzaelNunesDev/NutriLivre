@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.theme
+package nutrilivre.ui.theme
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.darkColorScheme

@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.screens
+package nutrilivre.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,8 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.myapplication.model.DadosMockados
-import com.example.myapplication.ui.components.BottomNavigationBar
+import nutrilivre.model.DadosMockados
+import nutrilivre.ui.components.BottomNavigationBar
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

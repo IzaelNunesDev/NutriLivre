@@ -1,4 +1,4 @@
-package com.example.myapplication.model
+package nutrilivre.model
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
@@ -44,6 +44,11 @@ data class Receita(
     val modoPreparo: List<String>,
     val tempoPreparo: String,
     val porcoes: Int,
+    val proteinas: Float, // gramas
+    val carboidratos: Float, // gramas
+    val gorduras: Float, // gramas
+    val calorias: Int, // kcal
+    val fibras: Float, // gramas
     var isFavorita: Boolean = false
 )
 
@@ -61,7 +66,12 @@ object DadosMockados {
             ),
             modoPreparo = listOf("Misture os vegetais.", "Adicione a quinoa."),
             tempoPreparo = "20 min",
-            porcoes = 2
+            porcoes = 2,
+            proteinas = 8.0f,
+            carboidratos = 35.0f,
+            gorduras = 4.0f,
+            calorias = 210,
+            fibras = 5.0f
         ),
         Receita(
             id = 2,
@@ -71,7 +81,12 @@ object DadosMockados {
             ingredientes = listOf("2 filés de frango", "2 batatas doces"),
             modoPreparo = listOf("Tempere o frango.", "Asse com as batatas."),
             tempoPreparo = "50 min",
-            porcoes = 2
+            porcoes = 2,
+            proteinas = 32.0f,
+            carboidratos = 40.0f,
+            gorduras = 7.0f,
+            calorias = 350,
+            fibras = 6.0f
         ),
         Receita(
             id = 3,
@@ -81,7 +96,12 @@ object DadosMockados {
             ingredientes = listOf("Frutas vermelhas congeladas", "Banana", "Iogurte"),
             modoPreparo = listOf("Bata tudo no liquidificador."),
             tempoPreparo = "5 min",
-            porcoes = 1
+            porcoes = 1,
+            proteinas = 5.0f,
+            carboidratos = 28.0f,
+            gorduras = 2.0f,
+            calorias = 140,
+            fibras = 3.0f
         ),
 
         Receita(
@@ -102,75 +122,18 @@ object DadosMockados {
                 "Cozinhe em fogo médio por 2 a 3 minutos de cada lado."
             ),
             tempoPreparo = "15 min",
-            porcoes = 1
+            porcoes = 1,
+            proteinas = 3.0f,
+            carboidratos = 22.0f,
+            gorduras = 1.5f,
+            calorias = 110,
+            fibras = 2.0f
         )
     )
 
-    val listaDeFavoritosMock = mutableListOf<Receita>()
     val listaDePerguntasFrequentes = listOf(
         "Como adicionar uma receita aos favoritos?",
         "Onde encontro as configurações do app?",
         "Como pesquisar por uma receita?"
     )
-
-    @OptIn(ExperimentalMaterial3Api::class) // Para ElevatedCard
-    @Composable
-    fun ReceitaItem(
-        receita: Receita,
-        onReceitaClick: (Int) -> Unit,
-        onFavoritoClick: (Receita) -> Unit
-    ) {
-        var isFavorito by remember { mutableStateOf(receita.isFavorita) } // Estado local para animação
-        val favoritoIconColor by animateColorAsState(
-            targetValue = if (isFavorito) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant,
-            animationSpec = tween(durationMillis = 300), label = "favoritoIconColor"
-        )
-        val favoritoIconScale by animateFloatAsState(
-            targetValue = if (isFavorito) 1.1f else 1.0f,
-            animationSpec = spring(
-                dampingRatio = Spring.DampingRatioMediumBouncy,
-                stiffness = Spring.StiffnessLow
-            ), label = "favoritoIconScale"
-        )
-
-        ElevatedCard( // Usando ElevatedCard do M3
-            onClick = { onReceitaClick(receita.id) },
-            modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 8.dp)
-                .fillMaxWidth()
-        ) {
-            Row(
-                modifier = Modifier.padding(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                // Poderia adicionar uma AsyncImage aqui para a foto da receita
-                // Coil: implementation("io.coil-kt:coil-compose:2.5.0")
-                /*
-            AsyncImage(
-                model = receita.imagemUrl,
-                contentDescription = "Foto da ${receita.nome}",
-                modifier = Modifier.size(72.dp).clip(CircleShape), // Ou RoundedCornerShape(8.dp)
-                contentScale = ContentScale.Crop
-            )
-            Spacer(Modifier.width(16.dp))
-            */
-
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = receita.nome,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onSurface
-                    )
-                    Spacer(Modifier.height(4.dp))
-                    Text(
-                        text = receita.descricaoCurta,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-        }
-    }
 }

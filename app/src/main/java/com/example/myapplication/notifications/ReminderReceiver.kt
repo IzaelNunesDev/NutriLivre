@@ -1,5 +1,5 @@
 // app/src/main/java/com/example/myapplication/notifications/ReminderReceiver.kt
-package com.example.myapplication.notifications
+package nutrilivre.notifications
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.myapplication.R
+import dev.izaelnunes.nutrilivre.R
 
 class ReminderReceiver : BroadcastReceiver() {
 

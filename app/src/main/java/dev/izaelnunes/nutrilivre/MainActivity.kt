@@ -15,10 +15,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import nutrilivre.data.UserPreferencesRepository
-import nutrilivre.navigation.AppNavigation
-import nutrilivre.notifications.ReminderReceiver
-import nutrilivre.ui.theme.NutriLivreTheme
+import dev.izaelnunes.nutrilivre.data.UserPreferencesRepository
+import dev.izaelnunes.nutrilivre.navigation.AppNavigation
+import dev.izaelnunes.nutrilivre.notifications.ReminderReceiver
+import dev.izaelnunes.nutrilivre.ui.theme.NutriLivreTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

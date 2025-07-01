@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "dev.izaelnunes.nutrilivre"
+    namespace = "dev.nutrilivre"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "dev.izaelnunes.nutrilivre"
+        applicationId = "dev.nutrilivre"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -68,6 +68,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation("androidx.navigation:navigation-compose:2.7.5")
+    implementation("com.google.accompanist:accompanist-navigation-animation:0.32.0")
+    implementation("com.google.accompanist:accompanist-placeholder:0.32.0")
+    implementation("androidx.compose.material:material-icons-extended:1.6.8")
 }
 
 configurations.all {
